@@ -29,7 +29,11 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
             "http://www.picture-newsletter.com/arctic/arctic-12.jpg")!,
                              aspectRatio: 0.8)
         imageCollection += [im1,im2, im3]
-      
+        
+        collectionView?.addGestureRecognizer(UIPinchGestureRecognizer(
+            target: self,
+            action: #selector(ImageGalleryCollectionViewController.zoom(_:)))
+        )
     }
     
     var flowLayout: UICollectionViewFlowLayout? {
@@ -49,6 +53,13 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
     var scale: CGFloat = 1  {
         didSet {
             collectionView?.collectionViewLayout.invalidateLayout()
+        }
+    }
+    
+    @objc func zoom(_ gesture: UIPinchGestureRecognizer) {
+        if gesture.state == .changed {
+            scale *= gesture.scale
+            gesture.scale = 1.0
         }
     }
     
