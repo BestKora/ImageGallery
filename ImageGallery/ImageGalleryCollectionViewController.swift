@@ -8,7 +8,8 @@
 
 import UIKit
 
-class ImageGalleryCollectionViewController: UICollectionViewController {
+class ImageGalleryCollectionViewController: UICollectionViewController,
+    UICollectionViewDelegateFlowLayout {
     
     // MARK: - Public API, Model
     
@@ -30,7 +31,33 @@ class ImageGalleryCollectionViewController: UICollectionViewController {
         imageCollection += [im1,im2, im3]
       
     }
-
+    
+    var flowLayout: UICollectionViewFlowLayout? {
+        return collectionView?.collectionViewLayout as? UICollectionViewFlowLayout
+    }
+    
+    private struct Constants {
+        static let columnCount = 3.0
+        static let minWidthRation = CGFloat(0.03)
+    }
+    
+    private var boundsCollectionWidth: CGFloat  {return (collectionView?.bounds.width)!}
+    private var gapItems: CGFloat  {return (flowLayout?.minimumInteritemSpacing)! *
+        CGFloat((Constants.columnCount - 1.0))}
+    private var gapSections: CGFloat  {return (flowLayout?.sectionInset.right)! * 2.0}
+    
+    var scale: CGFloat = 1  {
+        didSet {
+            collectionView?.collectionViewLayout.invalidateLayout()
+        }
+    }
+    
+    var predefinedWidth:CGFloat {
+        let width = floor((boundsCollectionWidth - gapItems - gapSections)
+            / CGFloat(Constants.columnCount)) * scale
+        return  min (max (width , boundsCollectionWidth * Constants.minWidthRation),
+                     boundsCollectionWidth)}
+    
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView,
@@ -47,6 +74,17 @@ class ImageGalleryCollectionViewController: UICollectionViewController {
             imageCell.imageURL = imageCollection[indexPath.item].url
         }
         return cell
+    }
+    
+    // MARK: UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = predefinedWidth
+        let aspectRatio = CGFloat(imageCollection[indexPath.item].aspectRatio)
+        return CGSize(width: width, height: width / aspectRatio)
+        
     }
     
     /*
