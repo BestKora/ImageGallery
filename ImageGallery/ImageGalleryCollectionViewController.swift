@@ -9,7 +9,7 @@
 import UIKit
 
 class ImageGalleryCollectionViewController: UICollectionViewController,
-    UICollectionViewDelegateFlowLayout {
+    UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
     
     // MARK: - Public API, Model
     
@@ -20,6 +20,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        collectionView!.dragDelegate = self
         let im1 = ImageModel(url: URL(string:
             "http://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg")!,
                              aspectRatio: 0.67)
@@ -111,6 +112,33 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
         
     }
     
+    // MARK: UICollectionViewDragDelegate
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        itemsForBeginning session: UIDragSession,
+                        at indexPath: IndexPath) -> [UIDragItem] {
+        session.localContext = collectionView
+        return dragItems(at: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        itemsForAddingTo session: UIDragSession,
+                        at indexPath: IndexPath,
+                        point: CGPoint) -> [UIDragItem] {
+        return dragItems(at: indexPath)
+    }
+    
+    private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
+        if let itemCell = collectionView?.cellForItem(at: indexPath)
+            as? ImageCollectionViewCell,
+            let image = itemCell.imageView.image {
+            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
+            dragItem.localObject = imageCollection[indexPath.item]
+            return [dragItem]
+        } else {
+            return []
+        }
+    }
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
