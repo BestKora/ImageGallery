@@ -38,6 +38,13 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
         )
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        flowLayout?.invalidateLayout()
+    }
+    
+    // MARK: Vars, Constants
+    
     var flowLayout: UICollectionViewFlowLayout? {
         return collectionView?.collectionViewLayout as? UICollectionViewFlowLayout
     }
@@ -47,7 +54,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
         static let minWidthRation = CGFloat(0.03)
     }
     
-      // MARK: Pinch GestureR ecognizer
+    // MARK: Pinch GestureR ecognizer
     
     private var boundsCollectionWidth: CGFloat  {return (collectionView?.bounds.width)!}
     private var gapItems: CGFloat  {return (flowLayout?.minimumInteritemSpacing)! *
