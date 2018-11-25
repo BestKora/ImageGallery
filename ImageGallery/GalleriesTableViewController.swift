@@ -24,7 +24,8 @@ class GalleriesTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageGalleries =
+         imageGalleries = [[ImageGallery(name: "Galery 1")]]
+ /*       imageGalleries =
             [
                 [ImageGallery(name: "Galery 1"),
                  ImageGallery(name: "Galery 2"),
@@ -45,6 +46,7 @@ class GalleriesTableViewController: UITableViewController {
             "http://www.picture-newsletter.com/arctic/arctic-12.jpg")!,
                              aspectRatio: 0.8)
         imageGalleries[0][0].images = [im1,im2,im3]
+ */
     }
 
     private func galleryName(at indexPath: IndexPath) -> String {
@@ -118,15 +120,20 @@ class GalleriesTableViewController: UITableViewController {
         if editingStyle == .delete {
             switch indexPath.section {
             case 0:
-                tableView.performBatchUpdates({
-                    imageGalleries[1].insert(
-                        imageGalleries[0].remove(at: indexPath.row), at: 0)
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                    tableView.insertRows(
-                         at: [IndexPath(row: 0, section: 1)], with: .automatic)
-                }, completion: {finished in
-                    self.selectRow(at: IndexPath(row: 0, section: 1), after: 0.6)
-                })
+                if imageGalleries.count < 2 {
+                    let removedRow = imageGalleries[0].remove(at: indexPath.row)
+                    imageGalleries.insert([removedRow], at: 1)
+                    tableView.reloadData()
+                } else {
+                    tableView.performBatchUpdates({
+                        imageGalleries[1].insert(
+                            imageGalleries[0].remove(at: indexPath.row), at: 0)
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                        tableView.insertRows(
+                            at: [IndexPath(row: 0, section: 1)], with: .automatic)
+                    }, completion: {finished in
+                        self.selectRow(at: IndexPath(row: 0, section: 1),after: 0.6)
+                    })}
             case 1:
                 tableView.performBatchUpdates({
                     imageGalleries[1].remove(at: indexPath.row)
@@ -173,7 +180,7 @@ class GalleriesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "Show Gallery", sender: indexPath)
+         showCollection(at: indexPath)
     }
     
     // MARK: - Navigation
@@ -185,37 +192,27 @@ class GalleriesTableViewController: UITableViewController {
         return navCon?.viewControllers.first as? ImageGalleryCollectionViewController
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let identifier = segue.identifier {
-            switch identifier {
-            case "Show Gallery":
-                if let indexPath = sender as? IndexPath {
-                    if let ivc = segue.destination.contents as?
-                        ImageGalleryCollectionViewController {
-                        lastIndexPath = indexPath
-                        if indexPath.section != 1 {
-                            ivc.imageGallery =
-                                imageGalleries[indexPath.section][indexPath.row]
-                            ivc.title =
-                                imageGalleries[indexPath.section][indexPath.row].name
-                            ivc.collectionView?.isUserInteractionEnabled = true
-                            
-                        } else {
-                            let newName = "Recently Deleted '" +
-                                imageGalleries[indexPath.section][indexPath.row].name
-                                + "'"
-                            ivc.imageGallery  = ImageGallery (name: newName)
-                            ivc.title = newName
-                            ivc.collectionView?.isUserInteractionEnabled = false
-                            ivc.collectionView?.backgroundColor = UIColor.gray
-                        }
-                        ivc.navigationItem.leftBarButtonItem =
-                            splitViewController?.displayModeButtonItem
-                    }
-                }
-            default:
-                break
+    private func showCollection(at indexPath: IndexPath) {
+        if let ivc = splitViewDetailCollectionController {
+            lastIndexPath = indexPath
+            if indexPath.section != 1 {
+                ivc.imageGallery =
+                    imageGalleries[indexPath.section][indexPath.row]
+                ivc.title =
+                    imageGalleries[indexPath.section][indexPath.row].name
+                ivc.collectionView?.isUserInteractionEnabled = true
+                ivc.collectionView?.backgroundColor = UIColor.white
+            } else {
+                let newName = "Recently Deleted '" +
+                    imageGalleries[indexPath.section][indexPath.row].name
+                    + "'"
+                ivc.imageGallery  = ImageGallery (name: newName)
+                ivc.title = newName
+                ivc.collectionView?.isUserInteractionEnabled = false
+                ivc.collectionView?.backgroundColor = UIColor.gray
             }
+            ivc.navigationItem.leftBarButtonItem =
+                splitViewController?.displayModeButtonItem
         }
     }
     

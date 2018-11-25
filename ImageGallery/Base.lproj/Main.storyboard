@@ -207,9 +207,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <segue destination="QFN-SG-REC" kind="showDetail" identifier="Show Gallery" id="tCU-1K-mfQ"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nGh-c0-e4l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -247,7 +244,4 @@
             <point key="canvasLocation" x="-707" y="-336"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="tCU-1K-mfQ"/>
-    </inferredMetricsTieBreakers>
 </document>
