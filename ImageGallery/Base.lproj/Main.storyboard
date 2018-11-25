@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -52,6 +53,7 @@
                                 <connections>
                                     <outlet property="imageView" destination="Rlp-B5-69v" id="qUK-Dd-1PB"/>
                                     <outlet property="spinner" destination="gRU-0t-zer" id="UIQ-bL-wT4"/>
+                                    <segue destination="a2w-LW-1y7" kind="show" identifier="Show Image" id="kVL-JH-BCs"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -83,6 +85,43 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xae-5g-ZO9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="55.664062499999993" y="147.65625"/>
+        </scene>
+        <!--Image View Controller-->
+        <scene sceneID="o2Z-Xn-7iI">
+            <objects>
+                <viewController id="a2w-LW-1y7" customClass="ImageViewController" customModule="ImageGallery" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NI9-PS-G6H">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NfT-kV-qmn">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                            </scrollView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="sVM-Kv-SBl">
+                                <rect key="frame" x="493.5" y="400.5" width="37" height="37"/>
+                                <color key="color" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="sVM-Kv-SBl" firstAttribute="centerY" secondItem="fx8-Pe-tNi" secondAttribute="centerY" id="Rnd-ec-thN"/>
+                            <constraint firstItem="NfT-kV-qmn" firstAttribute="leading" secondItem="NI9-PS-G6H" secondAttribute="leading" id="VTw-HB-bxu"/>
+                            <constraint firstItem="NfT-kV-qmn" firstAttribute="top" secondItem="NI9-PS-G6H" secondAttribute="top" id="gjR-um-Pnf"/>
+                            <constraint firstItem="sVM-Kv-SBl" firstAttribute="centerX" secondItem="fx8-Pe-tNi" secondAttribute="centerX" id="lkS-iC-Amg"/>
+                            <constraint firstAttribute="bottom" secondItem="NfT-kV-qmn" secondAttribute="bottom" id="uAa-jM-HHi"/>
+                            <constraint firstItem="NfT-kV-qmn" firstAttribute="trailing" secondItem="NI9-PS-G6H" secondAttribute="trailing" id="zzO-fH-doj"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="fx8-Pe-tNi"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="7pY-gK-JHD"/>
+                    <connections>
+                        <outlet property="scrollView" destination="NfT-kV-qmn" id="97g-2Y-koK"/>
+                        <outlet property="spinner" destination="sVM-Kv-SBl" id="C3N-nO-1Vg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HDx-Lg-QIg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1468" y="148"/>
         </scene>
     </scenes>
 </document>

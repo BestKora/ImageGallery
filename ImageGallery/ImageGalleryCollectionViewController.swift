@@ -111,13 +111,19 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
         
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using [segue destinationViewController].
-     // Pass the selected object to the new view controller.
-     }
-     */
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier {
+            switch identifier {
+            case "Show Image":
+                if let imageCell = sender as? ImageCollectionViewCell,
+                    let indexPath = collectionView?.indexPath(for: imageCell),
+                    let imgvc = segue.destination as? ImageViewController {
+                    imgvc.imageURL = imageCollection[indexPath.item].url
+                }
+            default: break
+            }
+        }
+    }
 }
