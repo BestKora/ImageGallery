@@ -13,7 +13,7 @@ struct ImageModel{
     var aspectRatio: Double
 }
 
-struct ImageGallery {
+class ImageGallery {
     var name: String
     var images = [ImageModel]()
     

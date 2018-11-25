@@ -34,13 +34,38 @@ class GalleriesTableViewController: UITableViewController {
                     ImageGallery(name: "Галерея 66")
                 ]
         ]
+        let im1 = ImageModel(url: URL(string:
+            "http://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg")!,
+                             aspectRatio: 0.67)
+        let im2 = ImageModel(url: URL(string:
+            "https://adriatic-lines.com/wp-content/uploads/2015/04/canal-of-Venice.jpg")!,
+                             aspectRatio: 1.5)
+        
+        let im3 = ImageModel(url: URL(string:
+            "http://www.picture-newsletter.com/arctic/arctic-12.jpg")!,
+                             aspectRatio: 0.8)
+        imageGalleries[0][0].images = [im1,im2,im3]
     }
 
+    private func galleryName(at indexPath: IndexPath) -> String {
+        return imageGalleries[indexPath.section][indexPath.row].name
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        selectRow(at: IndexPath(row: 0, section: 0))
+        let currentIndex = lastIndexPath != nil
+            ? lastIndexPath!
+            : IndexPath(row: 0, section: 0)
+        selectRow(at: currentIndex)
     }
- 
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if splitViewController?.preferredDisplayMode != .primaryOverlay {
+            splitViewController?.preferredDisplayMode = .primaryOverlay
+        }
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -74,10 +99,6 @@ class GalleriesTableViewController: UITableViewController {
             cell.textLabel?.text = galleryName(at: indexPath)
         }
         return cell
-    }
-    
-    private func galleryName(at indexPath: IndexPath) -> String {
-        return imageGalleries[indexPath.section][indexPath.row].name
     }
 
     override func tableView(_ tableView: UITableView,
@@ -118,20 +139,6 @@ class GalleriesTableViewController: UITableViewController {
             }
         }
     }
- 
-    private func selectRow(at indexPath: IndexPath,
-                           after timeDelay:  TimeInterval = 0.0) {
-        if tableView(self.tableView,
-             numberOfRowsInSection: indexPath.section) >= indexPath.row {
-            Timer.scheduledTimer(withTimeInterval: timeDelay,
-                                          repeats: false,
-                                            block: { (timer) in
-                self.tableView.selectRow(at: indexPath,
-                                   animated: false,
-                             scrollPosition: .none)
-            })
-        }
-    }
     
     override func tableView(_ tableView: UITableView,
                 leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
@@ -162,14 +169,68 @@ class GalleriesTableViewController: UITableViewController {
         }
     }
 
-    /*
+    
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    private var lastIndexPath: IndexPath?
+    
+    private var splitViewDetailCollectionController: ImageGalleryCollectionViewController? {
+        let navCon = splitViewController?.viewControllers.last as? UINavigationController
+        return navCon?.viewControllers.first as? ImageGalleryCollectionViewController
     }
-    */
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier {
+            switch identifier {
+            case "Show Gallery":
+                if let cell = sender as? GalleryTableViewCell,
+                    let indexPath = tableView.indexPath(for: cell) {
+                    if let ivc = segue.destination.contents as?
+                        ImageGalleryCollectionViewController {
+                        lastIndexPath = indexPath
+                        ivc.imageGallery =
+                            imageGalleries[indexPath.section][indexPath.row]
+                        ivc.title =
+                            imageGalleries[indexPath.section][indexPath.row].name
+                        ivc.collectionView?.isUserInteractionEnabled = true
+                        ivc.navigationItem.leftBarButtonItem =
+                            splitViewController?.displayModeButtonItem
+                    }
+                }
+            case "Not Show Gallery":
+                if let cell = sender as? UITableViewCell,
+                    let indexPath = tableView.indexPath(for: cell){
+                    if let ivc = segue.destination.contents as?
+                        ImageGalleryCollectionViewController {
+                        lastIndexPath = indexPath
+                        let newName = "Recently Deleted '" +
+                            imageGalleries[indexPath.section][indexPath.row].name + "'"
+                        ivc.imageGallery  = ImageGallery (name: newName)
+                        ivc.title = newName
+                        ivc.collectionView?.isUserInteractionEnabled = false
+                        ivc.collectionView?.backgroundColor = UIColor.gray
+                        ivc.navigationItem.leftBarButtonItem =
+                            splitViewController?.displayModeButtonItem
+                    }
+                }
+            default:
+                break
+            }
+        }
+    }
+    
+    private func selectRow(at indexPath: IndexPath,
+                           after timeDelay:  TimeInterval = 0.0) {
+        if tableView(self.tableView,
+                     numberOfRowsInSection: indexPath.section) >= indexPath.row {
+            Timer.scheduledTimer(withTimeInterval: timeDelay,
+                                 repeats: false,
+                                 block: { (timer) in
+                                    self.tableView.selectRow(at: indexPath,
+                                                             animated: false,
+                                                             scrollPosition: .none)
+            })
+        }
+    }
 
 }
