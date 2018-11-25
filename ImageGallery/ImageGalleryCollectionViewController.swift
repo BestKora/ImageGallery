@@ -98,6 +98,14 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
             withReuseIdentifier: "Image Cell",
             for: indexPath)
         if let imageCell = cell as? ImageCollectionViewCell {
+            imageCell.changeAspectRatio = { [weak self] in
+                if let aspectRatio =
+                    self?.imageCollection[indexPath.item].aspectRatio,
+                    aspectRatio < 0.95 || aspectRatio > 1.05 {
+                    self?.imageCollection[indexPath.item].aspectRatio = 1.0
+                    self?.flowLayout?.invalidateLayout()
+                }
+            }
             imageCell.imageURL = imageCollection[indexPath.item].url
         }
         return cell
