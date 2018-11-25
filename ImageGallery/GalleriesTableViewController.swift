@@ -169,6 +169,12 @@ class GalleriesTableViewController: UITableViewController {
         }
     }
 
+    // MARK: - Table view delegate
+    
+    override func tableView(_ tableView: UITableView,
+                            didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "Show Gallery", sender: indexPath)
+    }
     
     // MARK: - Navigation
 
@@ -183,32 +189,26 @@ class GalleriesTableViewController: UITableViewController {
         if let identifier = segue.identifier {
             switch identifier {
             case "Show Gallery":
-                if let cell = sender as? GalleryTableViewCell,
-                    let indexPath = tableView.indexPath(for: cell) {
+                if let indexPath = sender as? IndexPath {
                     if let ivc = segue.destination.contents as?
                         ImageGalleryCollectionViewController {
                         lastIndexPath = indexPath
-                        ivc.imageGallery =
-                            imageGalleries[indexPath.section][indexPath.row]
-                        ivc.title =
-                            imageGalleries[indexPath.section][indexPath.row].name
-                        ivc.collectionView?.isUserInteractionEnabled = true
-                        ivc.navigationItem.leftBarButtonItem =
-                            splitViewController?.displayModeButtonItem
-                    }
-                }
-            case "Not Show Gallery":
-                if let cell = sender as? UITableViewCell,
-                    let indexPath = tableView.indexPath(for: cell){
-                    if let ivc = segue.destination.contents as?
-                        ImageGalleryCollectionViewController {
-                        lastIndexPath = indexPath
-                        let newName = "Recently Deleted '" +
-                            imageGalleries[indexPath.section][indexPath.row].name + "'"
-                        ivc.imageGallery  = ImageGallery (name: newName)
-                        ivc.title = newName
-                        ivc.collectionView?.isUserInteractionEnabled = false
-                        ivc.collectionView?.backgroundColor = UIColor.gray
+                        if indexPath.section != 1 {
+                            ivc.imageGallery =
+                                imageGalleries[indexPath.section][indexPath.row]
+                            ivc.title =
+                                imageGalleries[indexPath.section][indexPath.row].name
+                            ivc.collectionView?.isUserInteractionEnabled = true
+                            
+                        } else {
+                            let newName = "Recently Deleted '" +
+                                imageGalleries[indexPath.section][indexPath.row].name
+                                + "'"
+                            ivc.imageGallery  = ImageGallery (name: newName)
+                            ivc.title = newName
+                            ivc.collectionView?.isUserInteractionEnabled = false
+                            ivc.collectionView?.backgroundColor = UIColor.gray
+                        }
                         ivc.navigationItem.leftBarButtonItem =
                             splitViewController?.displayModeButtonItem
                     }
