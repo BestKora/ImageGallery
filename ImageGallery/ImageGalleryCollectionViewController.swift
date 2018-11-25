@@ -14,7 +14,9 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
     // MARK: - Public API, Model
     
     var imageCollection = [ImageModel]()
-
+    
+   // MARK: - Live cycle methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,10 +47,14 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
         static let minWidthRation = CGFloat(0.03)
     }
     
+      // MARK: Pinch GestureR ecognizer
+    
     private var boundsCollectionWidth: CGFloat  {return (collectionView?.bounds.width)!}
     private var gapItems: CGFloat  {return (flowLayout?.minimumInteritemSpacing)! *
         CGFloat((Constants.columnCount - 1.0))}
     private var gapSections: CGFloat  {return (flowLayout?.sectionInset.right)! * 2.0}
+    
+    // MARK: Pinch Gesture Recognizer
     
     var scale: CGFloat = 1  {
         didSet {
