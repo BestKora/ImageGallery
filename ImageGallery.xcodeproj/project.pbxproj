@@ -16,6 +16,8 @@
 		E40146B321A9A60300241E1B /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40146B221A9A60300241E1B /* ImageCollectionViewCell.swift */; };
 		E40146B521AA89B600241E1B /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40146B421AA89B600241E1B /* ImageViewController.swift */; };
 		E40146B721AAA30300241E1B /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40146B621AAA30300241E1B /* Utilities.swift */; };
+		E40146B921AAC41B00241E1B /* GalleryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40146B821AAC41B00241E1B /* GalleryTableViewCell.swift */; };
+		E40146BB21AAC42E00241E1B /* GalleriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40146BA21AAC42E00241E1B /* GalleriesTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		E40146B221A9A60300241E1B /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		E40146B421AA89B600241E1B /* ImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		E40146B621AAA30300241E1B /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		E40146B821AAC41B00241E1B /* GalleryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryTableViewCell.swift; sourceTree = "<group>"; };
+		E40146BA21AAC42E00241E1B /* GalleriesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleriesTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,8 +67,10 @@
 			isa = PBXGroup;
 			children = (
 				E401469E21A9A14C00241E1B /* Main.storyboard */,
+				E40146BA21AAC42E00241E1B /* GalleriesTableViewController.swift */,
 				E40146AE21A9A2B000241E1B /* ImageGalleryCollectionViewController.swift */,
 				E40146B221A9A60300241E1B /* ImageCollectionViewCell.swift */,
+				E40146B821AAC41B00241E1B /* GalleryTableViewCell.swift */,
 				E40146B421AA89B600241E1B /* ImageViewController.swift */,
 				E40146B021A9A45700241E1B /* ImageGallery.swift */,
 				E40146A621A9A14E00241E1B /* Info.plist */,
@@ -156,8 +162,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E40146B721AAA30300241E1B /* Utilities.swift in Sources */,
+				E40146B921AAC41B00241E1B /* GalleryTableViewCell.swift in Sources */,
 				E40146B121A9A45700241E1B /* ImageGallery.swift in Sources */,
 				E401469B21A9A14C00241E1B /* AppDelegate.swift in Sources */,
+				E40146BB21AAC42E00241E1B /* GalleriesTableViewController.swift in Sources */,
 				E40146B521AA89B600241E1B /* ImageViewController.swift in Sources */,
 				E40146B321A9A60300241E1B /* ImageCollectionViewCell.swift in Sources */,
 				E40146AF21A9A2B000241E1B /* ImageGalleryCollectionViewController.swift in Sources */,

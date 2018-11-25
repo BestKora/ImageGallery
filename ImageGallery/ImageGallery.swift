@@ -14,9 +14,11 @@ struct ImageModel{
 }
 
 struct ImageGallery {
+    var name: String
     var images = [ImageModel]()
     
-    init (){
+    init(name: String) {
+        self.name = name
         self.images = [ImageModel]()
     }
 }
