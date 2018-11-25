@@ -9,7 +9,8 @@
 import UIKit
 
 class ImageGalleryCollectionViewController: UICollectionViewController,
-    UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
+    UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate,
+    UICollectionViewDropDelegate {
     
     // MARK: - Public API, Model
     
@@ -19,8 +20,9 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         collectionView!.dragDelegate = self
+        collectionView!.dropDelegate = self
+        
         let im1 = ImageModel(url: URL(string:
             "http://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg")!,
                              aspectRatio: 0.67)
@@ -137,6 +139,92 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
             return [dragItem]
         } else {
             return []
+        }
+    }
+    
+    // MARK: UICollectionViewDropDelegate
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        canHandle session: UIDropSession) -> Bool {
+        let isSelf = (session.localDragSession?.localContext as?
+            UICollectionView) == collectionView
+        if isSelf {
+            return session.canLoadObjects(ofClass: UIImage.self)
+        } else {
+            return session.canLoadObjects(ofClass: NSURL.self) &&
+                session.canLoadObjects(ofClass: UIImage.self)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        dropSessionDidUpdate session: UIDropSession,
+                        withDestinationIndexPath destinationIndexPath: IndexPath?
+        ) -> UICollectionViewDropProposal {
+        let isSelf = (session.localDragSession?.localContext as?
+            UICollectionView) == collectionView
+        return UICollectionViewDropProposal(operation: isSelf ? .move : .copy,
+                                            intent: .insertAtDestinationIndexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        performDropWith coordinator: UICollectionViewDropCoordinator) {
+        let destinationIndexPath = coordinator.destinationIndexPath ??
+            IndexPath(item: 0, section: 0)
+        
+        for item in coordinator.items {
+            if let sourceIndexPath = item.sourceIndexPath { // Drag locally
+                
+                collectionView.performBatchUpdates({
+                    let imageInfo = imageCollection.remove(at: sourceIndexPath.item)
+                    imageCollection.insert(imageInfo, at: destinationIndexPath.item)
+                    
+                    collectionView.deleteItems(at: [sourceIndexPath])
+                    collectionView.insertItems(at: [destinationIndexPath])
+                })
+                coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+            } else {  // Drag from other app
+                let placeholderContext = coordinator.drop(
+                    item.dragItem,
+                    to: UICollectionViewDropPlaceholder(
+                        insertionIndexPath: destinationIndexPath,
+                        reuseIdentifier: "DropPlaceholderCell"
+                    )
+                )
+                
+                var imageURLLocal: URL?
+                var aspectRatioLocal: Double?
+                
+                // Load UIImage
+                item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) {
+                    (provider, error) in
+                    DispatchQueue.main.async {
+                        if let image = provider as? UIImage {
+                            aspectRatioLocal = Double(image.size.width) /
+                                Double(image.size.height)
+                        }
+                    }
+                }
+                // Load URL
+                item.dragItem.itemProvider.loadObject(ofClass: NSURL.self) {
+                    (provider, error) in
+                    DispatchQueue.main.async {
+                        if let url = provider as? URL {
+                            imageURLLocal = url.imageURL
+                        }
+                        if imageURLLocal != nil, aspectRatioLocal != nil {
+                            placeholderContext.commitInsertion(dataSourceUpdates:{
+                                insertionIndexPath in
+                                self.imageCollection.insert(
+                                    ImageModel(url: imageURLLocal!,
+                                               aspectRatio: aspectRatioLocal!),
+                                    at: insertionIndexPath.item)
+                            })
+                        } else {
+                            placeholderContext.deletePlaceholder()
+                        }
+                    }
+                }
+            }
         }
     }
     // MARK: - Navigation
