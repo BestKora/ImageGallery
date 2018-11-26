@@ -21,7 +21,6 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
             }
         }
     }
-  //  var imageCollection = [ImageModel]()
     
    // MARK: - Live cycle methods
     
@@ -34,13 +33,29 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
             target: self,
             action: #selector(ImageGalleryCollectionViewController.zoom(_:)))
         )
-        navigationItem.leftBarButtonItem =
-            splitViewController?.displayModeButtonItem
+  //      navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         flowLayout?.invalidateLayout()
+    }
+    
+    var garbageView =  GarbageView()
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if let navBounds = navigationController?.navigationBar.bounds {
+            garbageView.frame =  CGRect(
+                x: navBounds.width*0.6,
+                y: 0.0,
+                width:  navBounds.width*0.4,
+                height: navBounds.height)
+            let barButton = UIBarButtonItem(customView: garbageView)
+            navigationItem.rightBarButtonItem = barButton
+            navigationItem.leftBarButtonItem =
+                splitViewController?.displayModeButtonItem
+        }
     }
     
     // MARK: Vars, Constants
@@ -140,7 +155,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController,
             as? ImageCollectionViewCell,
             let image = itemCell.imageView.image {
             let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
-            dragItem.localObject = imageGallery.images[indexPath.item]
+            dragItem.localObject = indexPath //imageGallery.images[indexPath.item]
             return [dragItem]
         } else {
             return []

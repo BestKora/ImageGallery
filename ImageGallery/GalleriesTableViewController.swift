@@ -24,7 +24,12 @@ class GalleriesTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         imageGalleries = [[ImageGallery(name: "Galery 1")]]
+        if let imageGalleriesFROM = imageGalleriesJSON {
+            imageGalleries = imageGalleriesFROM
+        } else  {
+            imageGalleries =
+                [[ImageGallery(name: "Gallery 1")]]
+        }
  /*       imageGalleries =
             [
                 [ImageGallery(name: "Galery 1"),
@@ -53,12 +58,45 @@ class GalleriesTableViewController: UITableViewController {
         return imageGalleries[indexPath.section][indexPath.row].name
     }
     
+    let defaults = UserDefaults.standard
+    var imageGalleriesJSON : [[ImageGallery]]? {
+        get {
+            if let savedGalleries =
+                defaults.object(forKey: "SavedGalleries") as? Data {
+                let decoder = JSONDecoder()
+                if let loadedGalleries =
+                    try? decoder.decode([[ImageGallery]].self,
+                                        from: savedGalleries) {
+                    return loadedGalleries
+                }
+            }
+            return nil
+        }
+        set {
+            if newValue != nil {
+                let encoder = JSONEncoder()
+                if let json = try? encoder.encode(newValue!) {
+                    defaults.set(json, forKey: "SavedGalleries")
+                }
+            }
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         let currentIndex = lastIndexPath != nil
             ? lastIndexPath!
             : IndexPath(row: 0, section: 0)
         selectRow(at: currentIndex)
+    }
+    
+    @IBAction func save(_ sender: UIBarButtonItem) {
+         imageGalleriesJSON = imageGalleries
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        imageGalleriesJSON = imageGalleries
     }
     
     override func viewWillLayoutSubviews() {
@@ -222,10 +260,11 @@ class GalleriesTableViewController: UITableViewController {
                      numberOfRowsInSection: indexPath.section) >= indexPath.row {
             Timer.scheduledTimer(withTimeInterval: timeDelay,
                                  repeats: false,
-                                 block: { (timer) in
-                                    self.tableView.selectRow(at: indexPath,
+                                 block: {[weak self](timer) in
+                                    self?.tableView.selectRow(at: indexPath,
                                                              animated: false,
                                                              scrollPosition: .none)
+                                     self?.showCollection(at: indexPath)
             })
         }
     }

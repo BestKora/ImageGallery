@@ -8,12 +8,12 @@
 
 import Foundation
 
-struct ImageModel{
+struct ImageModel: Codable{
     var url: URL
     var aspectRatio: Double
 }
 
-class ImageGallery {
+class ImageGallery:Codable {
     var name: String
     var images = [ImageModel]()
     

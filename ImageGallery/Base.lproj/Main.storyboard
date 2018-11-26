@@ -201,11 +201,18 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="XT0-KR-2et">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="F6E-oP-NHU">
-                            <connections>
-                                <action selector="newGallery:" destination="V2J-w4-FFF" id="ZEn-7n-gLQ"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="F6E-oP-NHU">
+                                <connections>
+                                    <action selector="newGallery:" destination="V2J-w4-FFF" id="ZEn-7n-gLQ"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="save" id="sxD-f5-pB1">
+                                <connections>
+                                    <action selector="save:" destination="V2J-w4-FFF" id="Wnd-Dy-dFg"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nGh-c0-e4l" userLabel="First Responder" sceneMemberID="firstResponder"/>
